@@ -11,9 +11,11 @@ namespace MockDeposits.Repositories
     {
         List<Deposit> deposits = new List<Deposit>();
 
+        Random r = new Random();
+
         public IEnumerable<Deposit> GetDeposits()
         {
-            throw new NotImplementedException();
+            return deposits;
         }
 
         public Deposit GetDepositByID(int depositId)
@@ -43,7 +45,26 @@ namespace MockDeposits.Repositories
 
         public void InitialiseDeposits()
         {
-            throw new NotImplementedException();
+            int numberOfDeposits = 50;
+            double minMaturityAmount = 70 * 1000 * 1000 / numberOfDeposits;
+            double maxMaturityAmount = 100 * 1000 * 1000 / numberOfDeposits;
+
+            deposits.Clear();
+            for (int i = 0; i < numberOfDeposits; i++)
+            {
+                var deposit = new Deposit()
+                {
+                    StartDate = DateTime.Today,
+                    TermInYears = r.Next(1, 5),
+                    InterestRate = 0.05,
+                    MaturityAmount = r.NextDouble() * (maxMaturityAmount - minMaturityAmount) + minMaturityAmount
+                };
+
+                deposit.EndDate = deposit.StartDate.AddYears(deposit.TermInYears);
+                deposit.Principal = deposit.MaturityAmount / (deposit.TermInYears * deposit.InterestRate);
+
+                deposits.Add(deposit);
+            }
         }
 
         public void AddDeposit()
