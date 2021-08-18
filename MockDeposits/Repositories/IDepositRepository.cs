@@ -16,5 +16,9 @@ namespace MockDeposits.Repositories
         void DeleteDeposit(int depositID);
         void UpdateDeposit(Deposit deposit);
         void Save();
+
+        void InitialiseDeposits();
+        void AddDeposit();
+        void RemoveDeposit();
     }
 }

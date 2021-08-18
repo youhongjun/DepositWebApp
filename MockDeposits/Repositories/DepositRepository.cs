@@ -9,6 +9,8 @@ namespace MockDeposits.Repositories
 {
     public class DepositRepository : IDepositRepository
     {
+        List<Deposit> deposits = new List<Deposit>();
+
         public IEnumerable<Deposit> GetDeposits()
         {
             throw new NotImplementedException();
@@ -35,6 +37,21 @@ namespace MockDeposits.Repositories
         }
 
         public void UpdateDeposit(Deposit deposit)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void InitialiseDeposits()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddDeposit()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RemoveDeposit()
         {
             throw new NotImplementedException();
         }
