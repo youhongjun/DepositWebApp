@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31613.86
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DepositWebApp", "DepositWebApp\DepositWebApp.csproj", "{B91E93EF-FFF1-48BB-A9E8-DC92719E6DC4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B91E93EF-FFF1-48BB-A9E8-DC92719E6DC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B91E93EF-FFF1-48BB-A9E8-DC92719E6DC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B91E93EF-FFF1-48BB-A9E8-DC92719E6DC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B91E93EF-FFF1-48BB-A9E8-DC92719E6DC4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4B535BAE-D069-4785-B17F-44AE3D91A8C1}
+	EndGlobalSection
+EndGlobal
