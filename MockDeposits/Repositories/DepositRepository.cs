@@ -13,6 +13,11 @@ namespace MockDeposits.Repositories
 
         Random r = new Random();
 
+        public DepositRepository()
+        {
+            InitialiseDeposits();
+        }
+
         public IEnumerable<Deposit> GetDeposits()
         {
             return deposits;
@@ -61,7 +66,7 @@ namespace MockDeposits.Repositories
                 };
 
                 deposit.EndDate = deposit.StartDate.AddYears(deposit.TermInYears);
-                deposit.Principal = deposit.MaturityAmount / (deposit.TermInYears * deposit.InterestRate);
+                deposit.Principal = deposit.MaturityAmount / (1 + deposit.TermInYears * deposit.InterestRate);
 
                 deposits.Add(deposit);
             }

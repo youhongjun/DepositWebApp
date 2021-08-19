@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using MockDeposits.Repositories;
+
 namespace DepositWebApp
 {
     public class Startup
@@ -24,6 +26,7 @@ namespace DepositWebApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddSingleton<IDepositRepository, DepositRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
