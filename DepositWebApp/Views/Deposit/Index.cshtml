@@ -5,7 +5,26 @@
 
 <h1>@ViewData["Title"]</h1>
 
-<p>Sum of all Maturity Amounts: <label id="lbTotal">heihei</label></p>
+<div class="container">
+    <div class="col-xs-12 col-sm-6 col-md-8">
+        <div class="row">
+            <div class="col-xs-6">
+                <p>I want to &nbsp;</p>
+            </div>
+            <div class="col-xs-6">
+                <select class="deposit-action">
+                    <option value="Hold" selected="selected">Hold</option>
+                    <option value="Buy">Buy</option>
+                    <option value="Sell">Sell</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-8">
+        <div class="row">
+            <p>Sum of all Maturity Amounts: <label id="lbTotal">$0.00</label></p>
+        </div>
+    </div>
 
 <div class="container">
     <br />
@@ -21,19 +40,23 @@
                     <th>Maturity Amount</th>
                 </tr>
             </thead>
-            <tfoot>
+            @*<tfoot>
                 <tr>
                     <th colspan="5" style="text-align:right">Total:</th>
                     <th style="text-align:right"></th>
                 </tr>
-            </tfoot>
+            </tfoot>*@
         </table>
     </div>
 </div>
 
 <script>
+    var refreshInterval;
+    var timer = false;
+    var table;
+
     $(document).ready(function () {
-        $("#deposits").DataTable({
+        table = $("#deposits").DataTable({
             "processing": false,
             "serverSide": true,
             "filter": false,
@@ -45,39 +68,39 @@
                 "datatype": "json",
                 "dataSrc": function (json) {
                     var l = formatCurrency(json.totalMaturityAmount);
-                    $("#lbTotal").html(l);
+                    $("#lbTotal").html("<b>" + l + "</b>");
                     return json.data;
                 }
             },
-            "footerCallback": function (row, data, start, end, display) {
-                var api = this.api(), data;
+            //"footerCallback": function (row, data, start, end, display) {
+            //    var api = this.api(), data;
 
-                var intVal = function (i) {
-                    return typeof i === 'string' ?
-                        i.replace(/[\$,]/g, '') * 1 :
-                        typeof i === 'number' ?
-                            i : 0;
-                };
+            //    var intVal = function (i) {
+            //        return typeof i === 'string' ?
+            //            i.replace(/[\$,]/g, '') * 1 :
+            //            typeof i === 'number' ?
+            //                i : 0;
+            //    };
 
-                total = api
-                    .column(5)
-                    .data()
-                    .reduce(function (a, b) {
-                        return intVal(a) + intVal(b);
-                    }, 0);
+            //    total = api
+            //        .column(5)
+            //        .data()
+            //        .reduce(function (a, b) {
+            //            return intVal(a) + intVal(b);
+            //        }, 0);
 
-                pageTotal = api
-                    .column(5, { page: 'current' })
-                    .data()
-                    .reduce(function (a, b) {
-                        return intVal(a) + intVal(b);
-                    }, 0);
+            //    pageTotal = api
+            //        .column(5, { page: 'current' })
+            //        .data()
+            //        .reduce(function (a, b) {
+            //            return intVal(a) + intVal(b);
+            //        }, 0);
 
-                $(api.column(5).footer()).html(
-                    //formatCurrency(pageTotal) + '<br>(' + formatCurrency(total) + ' total)'
-                    formatCurrency(pageTotal)
-                );
-            },
+            //    $(api.column(5).footer()).html(
+            //        //formatCurrency(pageTotal) + '<br>(' + formatCurrency(total) + ' total)'
+            //        formatCurrency(pageTotal)
+            //    );
+            //},
             "columnDefs": [
                 {
                     targets: -4,
@@ -138,7 +161,50 @@
                 },
             ]
         });
+
+        $('.deposit-action').on('change', function () {
+            this.disabled = true;
+            depositChange(this.value);
+            this.disabled = false;
+        });
     });
+
+    function depositChange(action) {
+        if (action == "Hold") {
+            if (timer) {
+                clearInterval(refreshInterval);
+                timer = false;
+            }
+        }
+        else {
+            $.ajax({
+                url: 'Deposit/AjaxCall',
+                contentType: "application/json; charset=utf-8",
+                data: { a: action },
+                dataType: "json",
+                success: function (responce) {
+                    table.ajax.reload(function (json) {
+                        if ((action == "Buy" && json.totalMaturityAmount >= 120 * 1000 * 1000)
+                            || (action == "Sell" && json.totalMaturityAmount <= 50 * 1000 * 1000)) {
+                            if (timer) {
+                                clearInterval(refreshInterval);
+                                timer = false;
+                            }
+                        }
+                        else if (!timer) {
+                            refreshInterval = setInterval(function () {
+                                depositChange(action);
+                            }, 5000);
+                            timer = true;
+                        }
+                    }, false);
+                },
+                error: function (responce) {
+                    alert(responce);
+                }
+            });
+        }
+   }
 
     var defopt = {
         times: 1,

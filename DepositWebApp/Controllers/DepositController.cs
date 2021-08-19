@@ -22,6 +22,20 @@ namespace DepositWebApp.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult AjaxCall(string a)
+        {
+            if (a == "Buy")
+            {
+                depositRepository.AddDeposit();
+            }
+            else if (a == "Sell")
+            {
+                depositRepository.RemoveDeposit();
+            }
+            return Json("done");
+        }
+
         public IActionResult LoadData()
         {
             try
