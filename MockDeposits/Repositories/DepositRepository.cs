@@ -59,9 +59,9 @@ namespace MockDeposits.Repositories
             {
                 var deposit = new Deposit()
                 {
-                    StartDate = DateTime.Today,
+                    StartDate = DateTime.Today.AddDays(-1 * r.Next(1, 186)),
                     TermInYears = r.Next(1, 5),
-                    InterestRate = 0.05,
+                    InterestRate = 0.001 * r.Next(15, 50),
                     MaturityAmount = r.NextDouble() * (maxMaturityAmount - minMaturityAmount) + minMaturityAmount
                 };
 
