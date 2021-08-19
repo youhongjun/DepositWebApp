@@ -40,12 +40,6 @@
                     <th>Maturity Amount</th>
                 </tr>
             </thead>
-            @*<tfoot>
-                <tr>
-                    <th colspan="5" style="text-align:right">Total:</th>
-                    <th style="text-align:right"></th>
-                </tr>
-            </tfoot>*@
         </table>
     </div>
 </div>
@@ -53,6 +47,7 @@
 <script>
     var refreshInterval;
     var timer = false;
+    var currentAction = "Hold";
     var table;
 
     $(document).ready(function () {
@@ -72,35 +67,6 @@
                     return json.data;
                 }
             },
-            //"footerCallback": function (row, data, start, end, display) {
-            //    var api = this.api(), data;
-
-            //    var intVal = function (i) {
-            //        return typeof i === 'string' ?
-            //            i.replace(/[\$,]/g, '') * 1 :
-            //            typeof i === 'number' ?
-            //                i : 0;
-            //    };
-
-            //    total = api
-            //        .column(5)
-            //        .data()
-            //        .reduce(function (a, b) {
-            //            return intVal(a) + intVal(b);
-            //        }, 0);
-
-            //    pageTotal = api
-            //        .column(5, { page: 'current' })
-            //        .data()
-            //        .reduce(function (a, b) {
-            //            return intVal(a) + intVal(b);
-            //        }, 0);
-
-            //    $(api.column(5).footer()).html(
-            //        //formatCurrency(pageTotal) + '<br>(' + formatCurrency(total) + ' total)'
-            //        formatCurrency(pageTotal)
-            //    );
-            //},
             "columnDefs": [
                 {
                     targets: -4,
@@ -175,8 +141,27 @@
                 clearInterval(refreshInterval);
                 timer = false;
             }
+            currentAction = action;
         }
         else {
+            if (currentAction == "Hold") {
+                currentAction = action;
+            }
+            else if (currentAction != action) {
+                if (timer) {
+                    clearInterval(refreshInterval);
+                    timer = false;
+                }
+                currentAction = action;
+            }
+
+            if (!timer) {
+                refreshInterval = setInterval(function () {
+                    depositChange(action);
+                }, 5000);
+                timer = true;
+            }
+
             $.ajax({
                 url: 'Deposit/AjaxCall',
                 contentType: "application/json; charset=utf-8",
@@ -190,12 +175,6 @@
                                 clearInterval(refreshInterval);
                                 timer = false;
                             }
-                        }
-                        else if (!timer) {
-                            refreshInterval = setInterval(function () {
-                                depositChange(action);
-                            }, 5000);
-                            timer = true;
                         }
                     }, false);
                 },
